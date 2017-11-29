@@ -1,23 +1,16 @@
 const dateFns = require('date-fns')
 const fs = require('fs')
-const { sum } = require('ramda')
+const { map, sum, zip } = require('ramda')
 const yaml = require('js-yaml')
 
 const WORKDAY = 8 * 60
 
+const computeDelta = (spans) => sum(map(duration, spans)) - WORKDAY
+const duration = ([start, end]) => end - start
+
 const timesheet = yaml.safeLoad(fs.readFileSync('timesheet.yml', 'utf8'))
-const hours = timesheet.map(day => {
-  return sum(day.spans.map(differenceInMinutes)) - WORKDAY
-})
+const deltas = timesheet.map(day => computeDelta(day.spans))
+const dates = timesheet.map(day => day.date)
 
-console.log(hours)
-console.log(sum(hours))
-
-function differenceInMinutes([startTime, endTime]) {
-  return toMinute(endTime) - toMinute(startTime)
-}
-
-function toMinute(time) {
-  const [hours, minutes] = time.split(":").map(str => parseInt(str, 10))
-  return 60 * hours + minutes
-}
+console.log(zip(dates, deltas))
+console.log(sum(deltas))
