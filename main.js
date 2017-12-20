@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
-const { map, sum, zip } = require('ramda')
+const { sum, zip } = require('ramda')
 const yaml = require('js-yaml')
 
 const WORKDAY = 8 * 60
 
-const computeDelta = (spans) => sum(map(duration, spans)) - WORKDAY
+const computeDelta = (spans) => sum(spans.map(duration)) - WORKDAY
 const duration = ([start, end]) => end - start
 
 const timesheet = yaml.safeLoad(fs.readFileSync('timesheet.yml', 'utf8'))
