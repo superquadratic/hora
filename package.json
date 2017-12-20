@@ -2,6 +2,7 @@
   "name": "timmy",
   "version": "0.1.0",
   "private": true,
+  "bin": "main.js",
   "scripts": {
     "start": "node main.js"
   },

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const dateFns = require('date-fns')
 const fs = require('fs')
 const { map, sum, zip } = require('ramda')
