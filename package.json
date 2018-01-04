@@ -1,11 +1,10 @@
 {
   "name": "timmy",
-  "version": "0.1.0",
-  "private": true,
+  "description": "A simple time tracker for the terminal",
+  "version": "0.0.1",
+  "repository": "superquadratic/timmy",
+  "license": "MIT",
   "bin": "main.js",
-  "scripts": {
-    "start": "node main.js"
-  },
   "dependencies": {
     "js-yaml": "^3.10.0",
     "ramda": "^0.25.0"
