@@ -1,8 +1,8 @@
 {
-  "name": "timmy",
+  "name": "hora",
   "description": "A simple time tracker for the terminal",
   "version": "0.0.1",
-  "repository": "superquadratic/timmy",
+  "repository": "superquadratic/hora",
   "license": "MIT",
   "bin": "main.js",
   "dependencies": {
