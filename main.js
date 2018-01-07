@@ -6,12 +6,12 @@ const yaml = require('js-yaml')
 
 const WORKDAY = 8 * 60
 
-const computeDelta = (spans) => sum(spans.map(duration)) - WORKDAY
+const computeBalance = (spans) => sum(spans.map(duration)) - WORKDAY
 const duration = ([start, end]) => end - start
 
 const timesheet = yaml.safeLoad(fs.readFileSync('timesheet.yml', 'utf8'))
-const deltas = timesheet.map(day => computeDelta(day.spans))
+const balances = timesheet.map(day => computeBalance(day.spans))
 const dates = timesheet.map(day => day.date)
 
-console.log(zip(dates, deltas))
-console.log(sum(deltas))
+console.log(zip(dates, balances))
+console.log(sum(balances))
