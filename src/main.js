@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const chalk = require('chalk')
+const { format } = require('date-fns')
 const { sum, zip } = require('lodash')
 
 const { loadTimesheet } = require('./timesheet')
@@ -10,7 +11,7 @@ const WORKDAY_DEBIT = 8 * 60
 try {
   main()
 } catch (error) {
-  console.log(chalk.red("Error: ") + error.message)
+  console.log(chalk.red('Error: ') + error.message)
 }
 
 function main() {
@@ -19,10 +20,11 @@ function main() {
   const dates = timesheet.map(day => day.date)
 
   zip(dates, balances).forEach(([date, balance]) => {
-    console.log(date + ": " + colorBalance(balance))
+    console.log(format(date, 'YYYY-MM-DD') + ': ' + colorBalance(balance))
   })
 
-  console.log(colorBalance(sum(balances)))
+  console.log('')
+  console.log('Balance: ' + colorBalance(sum(balances)))
 }
 
 function computeBalance(spans) {
@@ -35,7 +37,7 @@ function duration([start, end]) {
 
 function colorBalance(balance) {
   if (balance > 0) {
-    return chalk.green("+" + balance)
+    return chalk.green('+' + balance)
   } else if (balance < 0) {
     return chalk.red(balance)
   } else {
