@@ -2,15 +2,19 @@
 
 const chalk = require('chalk')
 const fs = require('fs')
-const { sum, zip } = require('lodash')
+const { sum, upperFirst, zip } = require('lodash')
 const yaml = require('js-yaml')
 
 const WORKDAY_DEBIT = 8 * 60
 
-main()
+try {
+  main()
+} catch (error) {
+  console.log(chalk.red("Error: ") + error.message)
+}
 
 function main() {
-  const timesheet = yaml.safeLoad(fs.readFileSync('timesheet.yml', 'utf8'))
+  const timesheet = loadTimesheet()
   const balances = timesheet.map(day => computeBalance(day.spans))
   const dates = timesheet.map(day => day.date)
 
@@ -19,6 +23,24 @@ function main() {
   })
 
   console.log(colorBalance(sum(balances)))
+}
+
+function loadTimesheet(filename = 'timesheet.yml') {
+  try {
+    const content = fs.readFileSync(filename, 'utf8')
+    return yaml.safeLoad(content)
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      throw new Error(`Missing timesheet file '${filename}'`)
+    } else if (error instanceof yaml.YAMLException) {
+      throw new Error(
+        `Syntax error in timesheet file '${filename}'\n` +
+        upperFirst(error.message)
+      )
+    } else {
+      throw error
+    }
+  }
 }
 
 function computeBalance(spans) {
