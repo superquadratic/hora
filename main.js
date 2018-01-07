@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const chalk = require('chalk')
 const fs = require('fs')
 const { sum, zip } = require('lodash')
 const yaml = require('js-yaml')
@@ -13,8 +14,11 @@ function main() {
   const balances = timesheet.map(day => computeBalance(day.spans))
   const dates = timesheet.map(day => day.date)
 
-  console.log(zip(dates, balances))
-  console.log(sum(balances))
+  zip(dates, balances).forEach(([date, balance]) => {
+    console.log(date + ": " + colorBalance(balance))
+  })
+
+  console.log(colorBalance(sum(balances)))
 }
 
 function computeBalance(spans) {
@@ -23,4 +27,14 @@ function computeBalance(spans) {
 
 function duration([start, end]) {
   return end - start
+}
+
+function colorBalance(balance) {
+  if (balance > 0) {
+    return chalk.green("+" + balance)
+  } else if (balance < 0) {
+    return chalk.red(balance)
+  } else {
+    return chalk.gray(balance)
+  }
 }
