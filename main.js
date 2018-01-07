@@ -4,7 +4,7 @@ const fs = require('fs')
 const { sum, zip } = require('ramda')
 const yaml = require('js-yaml')
 
-const WORKDAY = 8 * 60
+const WORKDAY_DEBIT = 8 * 60
 
 main()
 
@@ -18,7 +18,7 @@ function main() {
 }
 
 function computeBalance(spans) {
-  return sum(spans.map(duration)) - WORKDAY
+  return sum(spans.map(duration)) - WORKDAY_DEBIT
 }
 
 function duration([start, end]) {
