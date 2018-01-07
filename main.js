@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require('fs')
-const { sum, zip } = require('ramda')
+const { sum, zip } = require('lodash')
 const yaml = require('js-yaml')
 
 const WORKDAY_DEBIT = 8 * 60

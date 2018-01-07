@@ -7,6 +7,6 @@
   "bin": "main.js",
   "dependencies": {
     "js-yaml": "^3.10.0",
-    "ramda": "^0.25.0"
+    "lodash": "^4.17.4"
   }
 }
