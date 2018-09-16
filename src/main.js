@@ -2,7 +2,7 @@
 
 const chalk = require('chalk')
 const { format } = require('date-fns')
-const { sum, zip } = require('lodash')
+const { map, sum, zip } = require('lodash')
 
 const { loadTimesheet } = require('./timesheet')
 
@@ -16,8 +16,8 @@ try {
 
 function main() {
   const timesheet = loadTimesheet()
-  const balances = timesheet.map(day => computeBalance(day.spans))
-  const dates = timesheet.map(day => day.date)
+  const balances = map(timesheet.records, computeBalance)
+  const dates = Object.keys(timesheet.records)
 
   zip(dates, balances).forEach(([date, balance]) => {
     console.log(format(date, 'YYYY-MM-DD') + ': ' + colorBalance(balance))
