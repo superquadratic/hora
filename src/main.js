@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
 const chalk = require('chalk')
-const { format } = require('date-fns')
+const { format, getDay, isWithinRange } = require('date-fns')
 const { map, sum, zip } = require('lodash')
 
 const { loadTimesheet } = require('./timesheet')
-
-const WORKDAY_DEBIT = 8 * 60
 
 try {
   main()
@@ -16,7 +14,9 @@ try {
 
 function main() {
   const timesheet = loadTimesheet()
-  const balances = map(timesheet.records, computeBalance)
+  const balances = map(timesheet.records, (spans, date) =>
+    computeBalance(spans, date, timesheet.schedule)
+  )
   const dates = Object.keys(timesheet.records)
 
   zip(dates, balances).forEach(([date, balance]) => {
@@ -27,12 +27,17 @@ function main() {
   console.log('Balance: ' + colorBalance(sum(balances)))
 }
 
-function computeBalance(spans) {
-  return sum(spans.map(duration)) - WORKDAY_DEBIT
+function computeBalance(spans, date, schedule) {
+  return sum(spans.map(duration)) - getDebit(date, schedule)
 }
 
 function duration([start, end]) {
   return end - start
+}
+
+function getDebit(date, schedule) {
+  const range = schedule.find(r => isWithinRange(date, r.start, r.end))
+  return range.hours[getDay(date) - 1] * 60
 }
 
 function colorBalance(balance) {
