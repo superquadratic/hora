@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const chalk = require('chalk')
-const { format, getDay, isWithinRange } = require('date-fns')
-const { forEach, map, sumBy } = require('lodash')
+const { format, getDay, getISOWeek, getYear, isWithinRange } = require('date-fns')
+const { groupBy, map, sumBy } = require('lodash')
 
 const { loadTimesheet } = require('./timesheet')
 
@@ -14,16 +14,25 @@ try {
 
 function main() {
   const timesheet = loadTimesheet()
-  const dailyBalances = map(timesheet.records, (spans, date) => ({
-    date, balance: computeBalance(spans, date, timesheet.schedule)
-  }))
-  const totalBalance = sumBy(dailyBalances, 'balance');
 
-  forEach(dailyBalances, ({ date, balance }) => {
-    console.log(format(date, 'YYYY-MM-DD') + ': ' + colorBalance(balance))
+  const dailyBalances = map(timesheet.records, (spans, date) => ({
+    date, dayBalance: computeBalance(spans, date, timesheet.schedule)
+  }))
+
+  const weeklyBalances = map(groupBy(dailyBalances, getWeek), (days, week) => ({
+    week, days, weekBalance: sumBy(days, 'dayBalance')
+  }))
+
+  const totalBalance = sumBy(weeklyBalances, 'weekBalance');
+
+  weeklyBalances.forEach(({ week, days, weekBalance }) => {
+    days.forEach(({ date, dayBalance }) => {
+      console.log(format(date, 'YYYY-MM-DD') + ': ' + colorBalance(dayBalance))
+    })
+    console.log('w. ' + week + ': ' + colorBalance(weekBalance))
+    console.log('')
   })
 
-  console.log('')
   console.log('Balance: ' + colorBalance(totalBalance))
 }
 
@@ -38,6 +47,10 @@ function duration([start, end]) {
 function getDebit(date, schedule) {
   const range = schedule.find(r => isWithinRange(date, r.start, r.end))
   return range.hours[getDay(date) - 1] * 60
+}
+
+function getWeek({ date }) {
+  return getYear(date) + '-' + getISOWeek(date)
 }
 
 function colorBalance(balance) {
