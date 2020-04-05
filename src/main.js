@@ -2,7 +2,7 @@
 
 const chalk = require('chalk')
 const { format, getDay, isWithinRange } = require('date-fns')
-const { forEach, map, sum, sumBy } = require('lodash')
+const { forEach, map, sumBy } = require('lodash')
 
 const { loadTimesheet } = require('./timesheet')
 
@@ -28,7 +28,7 @@ function main() {
 }
 
 function computeBalance(spans, date, schedule) {
-  return sum(spans.map(duration)) - getDebit(date, schedule)
+  return sumBy(spans, duration) - getDebit(date, schedule)
 }
 
 function duration([start, end]) {
