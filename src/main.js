@@ -2,7 +2,7 @@
 
 const chalk = require('chalk')
 const { format, getDay, isWithinRange } = require('date-fns')
-const { map, sum, zip } = require('lodash')
+const { forEach, map, sum, sumBy } = require('lodash')
 
 const { loadTimesheet } = require('./timesheet')
 
@@ -14,17 +14,17 @@ try {
 
 function main() {
   const timesheet = loadTimesheet()
-  const balances = map(timesheet.records, (spans, date) =>
-    computeBalance(spans, date, timesheet.schedule)
-  )
-  const dates = Object.keys(timesheet.records)
+  const dailyBalances = map(timesheet.records, (spans, date) => ({
+    date, balance: computeBalance(spans, date, timesheet.schedule)
+  }))
+  const totalBalance = sumBy(dailyBalances, 'balance');
 
-  zip(dates, balances).forEach(([date, balance]) => {
+  forEach(dailyBalances, ({ date, balance }) => {
     console.log(format(date, 'YYYY-MM-DD') + ': ' + colorBalance(balance))
   })
 
   console.log('')
-  console.log('Balance: ' + colorBalance(sum(balances)))
+  console.log('Balance: ' + colorBalance(totalBalance))
 }
 
 function computeBalance(spans, date, schedule) {
