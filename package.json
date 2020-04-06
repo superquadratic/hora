@@ -5,10 +5,17 @@
   "repository": "superquadratic/hora",
   "license": "MIT",
   "bin": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js",
+    "test": "tap"
+  },
   "dependencies": {
     "chalk": "^2.3.0",
     "date-fns": "^1.29.0",
     "js-yaml": "^3.10.0",
     "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "tap": "^14.10.7"
   }
 }

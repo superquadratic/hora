@@ -5,6 +5,7 @@ const { format, getDay, getISOWeek, getYear, isWithinRange } = require('date-fns
 const { groupBy, map, sumBy } = require('lodash')
 
 const { loadTimesheet } = require('./timesheet')
+const { formatBalance } = require('./report/helpers')
 
 try {
   main()
@@ -27,13 +28,13 @@ function main() {
 
   weeklyBalances.forEach(({ week, days, weekBalance }) => {
     days.forEach(({ date, dayBalance }) => {
-      console.log(format(date, 'YYYY-MM-DD') + ': ' + colorBalance(dayBalance))
+      console.log(format(date, 'YYYY-MM-DD') + ': ' + formatBalance(dayBalance))
     })
-    console.log('w. ' + week + ': ' + colorBalance(weekBalance))
+    console.log('w. ' + week + ': ' + formatBalance(weekBalance))
     console.log('')
   })
 
-  console.log('Balance: ' + colorBalance(totalBalance))
+  console.log('Balance: ' + formatBalance(totalBalance))
 }
 
 function computeBalance(spans, date, schedule) {
@@ -51,14 +52,4 @@ function getDebit(date, schedule) {
 
 function getWeek({ date }) {
   return getYear(date) + '-' + getISOWeek(date)
-}
-
-function colorBalance(balance) {
-  if (balance > 0) {
-    return chalk.green('+' + balance)
-  } else if (balance < 0) {
-    return chalk.red(balance)
-  } else {
-    return chalk.gray(balance)
-  }
 }
