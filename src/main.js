@@ -30,7 +30,8 @@ function main() {
     days.forEach(({ date, dayBalance }) => {
       console.log(format(date, 'YYYY-MM-DD') + ': ' + formatBalance(dayBalance))
     })
-    console.log('w. ' + week + ': ' + formatBalance(weekBalance))
+    console.log(chalk.gray('-----------------'))
+    console.log((week + ': ').padEnd(12) + formatBalance(weekBalance))
     console.log('')
   })
 
@@ -51,5 +52,5 @@ function getDebit(date, schedule) {
 }
 
 function getWeek({ date }) {
-  return getYear(date) + '-' + getISOWeek(date)
+  return getYear(date) + '-W' + getISOWeek(date)
 }
