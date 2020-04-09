@@ -35,7 +35,7 @@ function main() {
     console.log('')
   })
 
-  console.log('Balance: ' + formatBalance(totalBalance))
+  console.log('Balance: ' + formatBalance(totalBalance).padStart(18))
 }
 
 function computeBalance(spans, date, schedule) {
