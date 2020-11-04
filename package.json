@@ -1,7 +1,7 @@
 {
   "name": "hora",
   "description": "A simple time tracker for the terminal",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "repository": "superquadratic/hora",
   "license": "MIT",
   "bin": "src/main.js",
